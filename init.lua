@@ -4,6 +4,10 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- netrw
+vim.g.netrw_liststyle = 3 -- use tree mode by default
+vim.g.netrw_winsize = 20 -- 20% vertical split
+
 -- Show a couple lines above and below the cursor when jumping around
 vim.o.scrolloff = 5
 
@@ -425,8 +429,14 @@ require('lazy').setup({
         end,
     },
 
+    -- better local undo
     {
         'mbbill/undotree',
+    },
+
+    -- just syntax highlighting
+    {
+        'IndianBoy42/tree-sitter-just',
     },
 
     -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -894,13 +904,28 @@ local spellGroup = vim.api.nvim_create_augroup('spell_files', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
     pattern = { '*.md, *.txt' },
     group = spellGroup,
-    command = 'setlocal spell wrap linebreak conceallevel=1',
+    command = 'setlocal spell wrap linebreak',
     -- this is nice, but will mess with copy/paste
     --command = "setlocal spell wrap linebreak autoindent formatoptions=tacqw textwidth=80 wrapmargin=0",
 })
 
-vim.keymap.set('n', '<leader>e', '<cmd>E<CR>', { desc = '[E]xplore Files' })
+local markdownGroup = vim.api.nvim_create_augroup('markdown_files', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+    pattern = { '*.md' },
+    group = markdownGroup,
+    command = 'setlocal conceallevel=1',
+    -- this is nice, but will mess with copy/paste
+    --command = "setlocal spell wrap linebreak autoindent formatoptions=tacqw textwidth=80 wrapmargin=0",
+})
+
+
+vim.keymap.set('n', '<leader>e', '<cmd>Lexplore<CR>', { desc = '[E]xplore Files (Toggle)' })
 vim.keymap.set('t', '<ESC>', '<C-\\><C-n>', { noremap = true })
+
+-- vim.keymap.set({ 'n', 't' }, '<M-H>', '<C-W>h', { desc = 'Alt-h for Window Left' })
+-- vim.keymap.set({ 'n', 't' }, '<M-J>', '<C-W>j', { desc = 'Alt-j for Window Down' })
+-- vim.keymap.set({ 'n', 't' }, '<M-K>', '<C-W>k', { desc = 'Alt-k for Window Up' })
+-- vim.keymap.set({ 'n', 't' }, '<M-L>', '<C-W>l', { desc = 'Alt-l for Window Right' })
 
 -- auto save the buffer
 -- vim.opt.autowriteall = true
